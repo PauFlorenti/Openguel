@@ -75,6 +75,9 @@ int main()
 	unsigned int vertex_buffer;
 	glGenBuffers(1, &vertex_buffer);
 
+	unsigned int vertex_array;
+	glGenVertexArrays(1, &vertex_array);
+
 	unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex_shader, 1, &vertex_shader_source, nullptr);
 	glCompileShader(vertex_shader);
@@ -102,6 +105,13 @@ int main()
 	glAttachShader(shader_program, fragment_shader);
 	glLinkProgram(shader_program);
 
+	glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
+	
+	if (!success)
+	{
+		return -1;
+	}
+
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
 
@@ -112,6 +122,8 @@ int main()
 
 		glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		glBindVertexArray(vertex_array);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
